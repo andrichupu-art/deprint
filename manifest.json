@@ -2,7 +2,7 @@
   "name": "DEPRINT - Digital BON System",
   "short_name": "DEPRINT",
   "description": "Aplikasi Digital BON System - Input, Riwayat, dan Cetak Bon",
-  "start_url": "./CETAK_BON_v8.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
