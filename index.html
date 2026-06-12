@@ -1175,7 +1175,7 @@
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:flex-end;">
                     <input type="text" id="input-master-jenis" class="form-control" placeholder="Contoh: Kain Combed 30s">
                     <div style="display:flex; gap:8px;">
-                        <input type="number" id="input-master-harga" class="form-control" placeholder="Harga (Rp)">
+                        <input type="text" inputmode="numeric" id="input-master-harga" class="form-control" placeholder="Harga (Rp)">
                         <button class="btn-submit" id="btn-save-barang" style="width:auto; padding:11px 14px;" onclick="simpanMasterBarang()">Simpan</button>
                     </div>
                 </div>
@@ -1705,7 +1705,8 @@
             const jenisVal = inputJenis.value.trim();
             const hargaVal = fromRupiah(inputHarga.value);
 
-            if(!jenisVal || hargaVal <= 0) { showToast('warn','Perhatian','Jenis & Harga valid wajib diisi!'); return; }
+            if(!jenisVal) { showToast('warn','Perhatian','Nama jenis barang wajib diisi!'); document.getElementById('input-master-jenis').focus(); return; }
+            if(!inputHarga.value.trim() || hargaVal <= 0) { showToast('warn','Perhatian','Harga barang wajib diisi!'); document.getElementById('input-master-harga').focus(); return; }
 
             let error;
             if(!editId) {
@@ -2420,11 +2421,8 @@
                 }
             });
 
-            // Format rupiah untuk input harga barang (master)
             const hargaInput = document.getElementById('input-master-harga');
             if (hargaInput) {
-                hargaInput.setAttribute('type', 'text');
-                hargaInput.setAttribute('inputmode', 'numeric');
                 hargaInput.addEventListener('input', function() { applyRupiahFormat(this); });
             }
 
