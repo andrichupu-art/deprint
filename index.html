@@ -1995,27 +1995,55 @@
 
                 const cardClass = isPending ? 'status-pending' : 'status-lunas';
 
+                const cardId = `riwayat-card-${vendor.replace(/\s+/g,'-')}-${bons[0].id}`;
                 container.innerHTML += `
-                    <div class="card-bon ${cardClass}">
-                        <div class="card-header-flex">
+                    <div class="card-bon ${cardClass}" id="${cardId}">
+                        <div class="card-header-flex" onclick="toggleRiwayatCard('${cardId}')" style="cursor:pointer;">
                             <div style="display:flex;flex-direction:column;gap:3px;">
                                 <h4 style="font-size:1.1rem;color:#FFFFFF;display:flex;align-items:center;gap:6px;">
                                     ${vendor}
                                 </h4>
                                 ${subLabel}
                             </div>
-                            ${badgeHtml}
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                ${badgeHtml}
+                                <span class="riwayat-chevron" style="font-size:1.1rem;color:var(--text-muted);transition:transform 0.3s;display:inline-block;">▾</span>
+                            </div>
                         </div>
-                        <div class="card-goods-list" style="margin:10px 0;padding:4px 0;">
-                            ${itemRows}
-                        </div>
-                        <div class="card-footer-flex">
-                            <div>${footerHtml}</div>
+                        <div class="riwayat-body" style="display:none;">
+                            <div class="card-goods-list" style="margin:10px 0;padding:4px 0;">
+                                ${itemRows}
+                            </div>
+                            <div class="card-footer-flex">
+                                <div>${footerHtml}</div>
+                            </div>
                         </div>
                     </div>`;
             });
 
             lucide.createIcons();
+        }
+
+        function toggleRiwayatCard(cardId) {
+            const card = document.getElementById(cardId);
+            if (!card) return;
+            const body = card.querySelector('.riwayat-body');
+            const chevron = card.querySelector('.riwayat-chevron');
+            const isOpen = body.style.display !== 'none';
+
+            // Tutup semua card lain dulu
+            document.querySelectorAll('#riwayat-list .riwayat-body').forEach(b => {
+                b.style.display = 'none';
+            });
+            document.querySelectorAll('#riwayat-list .riwayat-chevron').forEach(c => {
+                c.style.transform = 'rotate(0deg)';
+            });
+
+            // Toggle card yang diklik
+            if (!isOpen) {
+                body.style.display = 'block';
+                chevron.style.transform = 'rotate(180deg)';
+            }
         }
 
         function renderCetak(expandAll = false) {
