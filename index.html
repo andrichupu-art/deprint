@@ -742,35 +742,55 @@
         .nav-item.exit-btn { color: #ff6b6b; }
         .nav-item.exit-btn:active { transform: scale(0.9); }
 
-        /* ===== ICON 3D/4D NAVBAR ===== */
+        /* ===== ICON NAVBAR — SVG CUSTOM ===== */
         .nav-icon-3d {
-            width: 30px; height: 30px;
+            width: 34px; height: 34px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.15rem;
-            border-radius: 10px;
-            background: linear-gradient(145deg, #2a3a2e 0%, #14201a 100%);
+            border-radius: 11px;
+            background: linear-gradient(160deg, #1a3124 0%, #0d1f14 100%);
+            border: 1px solid rgba(162, 213, 51, 0.12);
             box-shadow:
-                0 3px 0 rgba(0,0,0,0.55),
-                inset 0 1px 1px rgba(255,255,255,0.12),
-                inset 0 -2px 3px rgba(0,0,0,0.5);
-            transform: perspective(60px) rotateX(8deg);
-            transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease, background 0.3s ease;
+                0 3px 6px rgba(0,0,0,0.45),
+                inset 0 1px 0 rgba(255,255,255,0.07);
+            transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease, background 0.25s ease, border-color 0.25s ease;
+        }
+        .nav-icon-3d svg {
+            width: 17px; height: 17px;
+            stroke: #6b8f5e;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.25s ease, filter 0.25s ease;
         }
         .nav-item.active .nav-icon-3d {
-            background: linear-gradient(145deg, #c6f24a 0%, #6f9c1f 100%);
+            background: linear-gradient(160deg, #2a5c1a 0%, #1a3d10 100%);
+            border-color: rgba(162, 213, 51, 0.45);
             box-shadow:
-                0 4px 0 #4a6e15,
-                0 6px 10px rgba(162,213,51,0.45),
-                inset 0 1px 1px rgba(255,255,255,0.5),
-                inset 0 -2px 3px rgba(0,0,0,0.25);
-            transform: perspective(60px) rotateX(8deg) translateY(-3px) scale(1.08);
+                0 4px 14px rgba(162,213,51,0.3),
+                0 2px 4px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(162,213,51,0.25);
+            transform: translateY(-3px) scale(1.07);
+        }
+        .nav-item.active .nav-icon-3d svg {
+            stroke: #a2d533;
+            filter: drop-shadow(0 0 4px rgba(162,213,51,0.6));
         }
         .nav-item:active .nav-icon-3d {
-            transform: perspective(60px) rotateX(8deg) translateY(1px) scale(0.94);
-            box-shadow: 0 1px 0 rgba(0,0,0,0.55), inset 0 1px 1px rgba(255,255,255,0.1), inset 0 -1px 2px rgba(0,0,0,0.5);
+            transform: translateY(1px) scale(0.93);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.5), inset 0 1px 0 rgba(0,0,0,0.2);
         }
         .nav-item.exit-btn .nav-icon-3d {
-            background: linear-gradient(145deg, #4a2020 0%, #1f0d0d 100%);
+            background: linear-gradient(160deg, #3a1616 0%, #1f0c0c 100%);
+            border-color: rgba(255, 100, 100, 0.15);
+        }
+        .nav-item.exit-btn .nav-icon-3d svg {
+            stroke: #b05050;
+        }
+        .nav-item.exit-btn.active .nav-icon-3d svg,
+        .nav-item.exit-btn:hover .nav-icon-3d svg {
+            stroke: #ff6b6b;
+            filter: drop-shadow(0 0 4px rgba(255,100,100,0.5));
         }
 
         /* ===== LABEL CHIP (pengganti icon) ===== */
@@ -1172,12 +1192,36 @@
 
         <!-- BOTTOM NAVIGATION NAVBAR -->
         <nav id="main-nav" class="bottom-nav">
-            <button id="welcome-btn" class="nav-item" onclick="switchTab('welcome-tab', this)" style="display:none;"><span class="nav-icon-3d">🏠</span>Home</button>
-            <button id="default-active-btn" class="nav-item" onclick="switchTab('input-tab', this)"><span class="nav-icon-3d">📝</span>Input</button>
-            <button class="nav-item" onclick="switchTab('riwayat-tab', this)"><span class="nav-icon-3d">🕘</span>Riwayat</button>
-            <button class="nav-item" onclick="switchTab('cetak-tab', this)"><span class="nav-icon-3d">🖨️</span>Cetak</button>
-            <button class="nav-item" onclick="switchTab('setting-tab', this)"><span class="nav-icon-3d">⚙️</span>Setting</button>
-            <button class="nav-item exit-btn" onclick="exitToWelcome()"><span class="nav-icon-3d">🚪</span>Exit</button>
+            <button id="welcome-btn" class="nav-item" onclick="switchTab('welcome-tab', this)" style="display:none;">
+                <span class="nav-icon-3d">
+                    <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+                </span>Home
+            </button>
+            <button id="default-active-btn" class="nav-item" onclick="switchTab('input-tab', this)">
+                <span class="nav-icon-3d">
+                    <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12h8M12 8v8"/></svg>
+                </span>Input
+            </button>
+            <button class="nav-item" onclick="switchTab('riwayat-tab', this)">
+                <span class="nav-icon-3d">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                </span>Riwayat
+            </button>
+            <button class="nav-item" onclick="switchTab('cetak-tab', this)">
+                <span class="nav-icon-3d">
+                    <svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="8" rx="1"/><path d="M4 10h16a1 1 0 011 1v7a1 1 0 01-1 1h-3v-4H7v4H4a1 1 0 01-1-1v-7a1 1 0 011-1z"/><rect x="7" y="15" width="10" height="5" rx="1"/></svg>
+                </span>Cetak
+            </button>
+            <button class="nav-item" onclick="switchTab('setting-tab', this)">
+                <span class="nav-icon-3d">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                </span>Setting
+            </button>
+            <button class="nav-item exit-btn" onclick="exitToWelcome()">
+                <span class="nav-icon-3d">
+                    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                </span>Exit
+            </button>
         </nav>
 
     </div>
@@ -1199,7 +1243,17 @@
         </div>
     </div>
 
-    <!-- MODAL POPUP FORM PELUNASAN -->
+    <!-- CUSTOM WARNING MODAL (vendor masih ada pending) -->
+    <div id="custom-warning-overlay" class="custom-confirm-overlay">
+        <div class="custom-confirm-box" style="border-color: rgba(251,191,36,0.4);">
+            <div class="custom-confirm-icon" id="custom-warning-icon">⚠️</div>
+            <div class="custom-confirm-title" id="custom-warning-title">Tidak Bisa Dihapus</div>
+            <div class="custom-confirm-msg" id="custom-warning-msg" style="line-height:1.65;"></div>
+            <div class="custom-confirm-actions" style="justify-content:center;">
+                <button class="custom-confirm-btn ok" id="custom-warning-close" style="background:linear-gradient(135deg,#fbbf24,#b45309); box-shadow:0 4px 12px rgba(251,191,36,0.35); max-width:180px;">Mengerti</button>
+            </div>
+        </div>
+    </div>
     <div id="popup-pelunasan" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-header">
@@ -1268,6 +1322,50 @@
             toast.classList.add('hide');
             setTimeout(() => { if (toast.parentElement) toast.parentElement.removeChild(toast); }, 300);
         }
+
+        // ===== CUSTOM CONFIRM MODAL ENGINE =====
+        function showCustomConfirm(icon, title, msg, onOk) {
+            const overlay = document.getElementById('custom-confirm-overlay');
+            document.getElementById('custom-confirm-icon').textContent = icon;
+            document.getElementById('custom-confirm-title').textContent = title;
+            document.getElementById('custom-confirm-msg').innerHTML = msg;
+            document.getElementById('custom-confirm-ok').textContent = 'Ya, Hapus';
+            document.getElementById('custom-confirm-ok').className = 'custom-confirm-btn ok';
+            document.getElementById('custom-confirm-cancel').style.display = '';
+            overlay.classList.add('show');
+
+            // Clone untuk hapus event lama
+            const oldOk = document.getElementById('custom-confirm-ok');
+            const newOk = oldOk.cloneNode(true);
+            oldOk.parentNode.replaceChild(newOk, oldOk);
+
+            const oldCancel = document.getElementById('custom-confirm-cancel');
+            const newCancel = oldCancel.cloneNode(true);
+            oldCancel.parentNode.replaceChild(newCancel, oldCancel);
+
+            document.getElementById('custom-confirm-ok').addEventListener('click', async () => {
+                overlay.classList.remove('show');
+                await onOk();
+            });
+            document.getElementById('custom-confirm-cancel').addEventListener('click', () => {
+                overlay.classList.remove('show');
+            });
+        }
+
+        function showCustomWarning(icon, title, msg) {
+            const overlay = document.getElementById('custom-warning-overlay');
+            document.getElementById('custom-warning-icon').textContent = icon;
+            document.getElementById('custom-warning-title').textContent = title;
+            document.getElementById('custom-warning-msg').innerHTML = msg;
+            overlay.classList.add('show');
+        }
+
+        // Init warning close button
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('custom-warning-close').addEventListener('click', () => {
+                document.getElementById('custom-warning-overlay').classList.remove('show');
+            });
+        });
 
         const SUPABASE_URL = "https://gtzszakgflhddkltlayj.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0enN6YWtnZmxoZGRrbHRsYXlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNDg0MzksImV4cCI6MjA5NjgyNDQzOX0.w0r_dCBE20LLy5c5uPbSka9sBNDNJS8yR7zmfuwl9W0";
@@ -1553,11 +1651,28 @@
         }
 
         async function hapusMasterVendor(id, name) {
-            if(confirm(`Hapus vendor "${name}" dari Supabase Cloud?`)) {
-                await _supabase.from('master_vendor').delete().eq('id', id);
-                await fetchAllFromSupabase();
-                renderMasterVendorList();
+            // Cek apakah vendor ini masih punya BON berstatus PENDING
+            const pendingBon = databaseBon.filter(b => b.vendor === name && b.status === 'PENDING');
+            if (pendingBon.length > 0) {
+                const totalSisa = pendingBon.reduce((acc, b) => acc + (b.sisa || 0), 0);
+                showCustomWarning(
+                    '⚠️',
+                    'Vendor Tidak Bisa Dihapus',
+                    `<strong style="color:var(--accent-pending)">${name}</strong> masih memiliki <strong>${pendingBon.length} bon PENDING</strong> dengan total sisa tagihan <strong style="color:#ff6b6b">Rp ${totalSisa.toLocaleString('id-ID')}</strong>.<br><br>Lunasi semua bon terlebih dahulu sebelum menghapus vendor ini.`
+                );
+                return;
             }
+            showCustomConfirm(
+                '🗑️',
+                'Hapus Vendor?',
+                `Vendor <strong>${name}</strong> akan dihapus permanen dari Supabase Cloud. Tindakan ini tidak dapat dibatalkan.`,
+                async () => {
+                    await _supabase.from('master_vendor').delete().eq('id', id);
+                    await fetchAllFromSupabase();
+                    renderMasterVendorList();
+                    showToast('success', 'Dihapus', `Vendor "${name}" berhasil dihapus.`);
+                }
+            );
         }
 
         // --- CRUD BARANG ---
@@ -1626,11 +1741,17 @@
         }
 
         async function hapusMasterBarang(id, jenis) {
-            if(confirm(`Hapus barang "${jenis}" dari Supabase Cloud?`)) {
-                await _supabase.from('master_barang').delete().eq('id', id);
-                await fetchAllFromSupabase();
-                renderMasterBarangList();
-            }
+            showCustomConfirm(
+                '🗑️',
+                'Hapus Barang?',
+                `Barang <strong>${jenis}</strong> akan dihapus permanen dari Supabase Cloud. Tindakan ini tidak dapat dibatalkan.`,
+                async () => {
+                    await _supabase.from('master_barang').delete().eq('id', id);
+                    await fetchAllFromSupabase();
+                    renderMasterBarangList();
+                    showToast('success', 'Dihapus', `Barang "${jenis}" berhasil dihapus.`);
+                }
+            );
         }
 
         // --- TRANSAKSI BON ---
@@ -1852,11 +1973,15 @@
             }
         }
 
-        function showCustomConfirm(title, msg) {
+        function showCustomConfirmPromise(title, msg) {
             return new Promise(resolve => {
                 const overlay = document.getElementById('custom-confirm-overlay');
+                document.getElementById('custom-confirm-icon').textContent = '🗑️';
                 document.getElementById('custom-confirm-title').textContent = title;
-                document.getElementById('custom-confirm-msg').textContent = msg;
+                document.getElementById('custom-confirm-msg').innerHTML = msg;
+                document.getElementById('custom-confirm-ok').textContent = 'Ya, Hapus';
+                document.getElementById('custom-confirm-ok').className = 'custom-confirm-btn ok';
+                document.getElementById('custom-confirm-cancel').style.display = '';
                 const btnOk = document.getElementById('custom-confirm-ok');
                 const btnCancel = document.getElementById('custom-confirm-cancel');
 
@@ -1877,7 +2002,7 @@
         }
 
         async function hapusSesiClosed(ids) {
-            const konfirmasi = await showCustomConfirm('Hapus Bon CLOSED?', `${ids.length} bon ini akan dihapus permanen dari Riwayat & Cetak.`);
+            const konfirmasi = await showCustomConfirmPromise('Hapus Bon CLOSED?', `${ids.length} bon ini akan dihapus permanen dari Riwayat & Cetak.`);
             if(konfirmasi) {
                 await _supabase.from('database_bon').delete().in('id', ids);
                 await fetchAllFromSupabase();
