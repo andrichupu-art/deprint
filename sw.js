@@ -6,7 +6,7 @@ const CACHE_VERSION = 'v1.0.0';
 const CACHE_NAME = 'deprint-cache-' + CACHE_VERSION;
 
 const ASSETS_TO_CACHE = [
-    './CETAK_BON_v8.html',
+    './index.html',
     './manifest.json',
     './LOGO_SJ.png'
 ];
@@ -53,7 +53,7 @@ self.addEventListener('fetch', (event) => {
             .catch(() => {
                 // Offline / network gagal -> ambil dari cache
                 return caches.match(event.request).then((cached) => {
-                    return cached || caches.match('./CETAK_BON_v8.html');
+                    return cached || caches.match('./index.html');
                 });
             })
     );
