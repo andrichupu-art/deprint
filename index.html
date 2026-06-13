@@ -1246,7 +1246,7 @@
     <!-- CUSTOM CONFIRM MODAL -->
     <div id="custom-confirm-overlay" class="custom-confirm-overlay">
         <div class="custom-confirm-box">
-            <div class="custom-confirm-icon">🗑️</div>
+            <div class="custom-confirm-icon" id="custom-confirm-icon">🗑️</div>
             <div class="custom-confirm-title" id="custom-confirm-title">Hapus Data?</div>
             <div class="custom-confirm-msg" id="custom-confirm-msg">Apakah kamu yakin?</div>
             <div class="custom-confirm-actions">
@@ -1342,12 +1342,8 @@
             document.getElementById('custom-confirm-icon').textContent = icon;
             document.getElementById('custom-confirm-title').textContent = title;
             document.getElementById('custom-confirm-msg').innerHTML = msg;
-            document.getElementById('custom-confirm-ok').textContent = 'Ya, Hapus';
-            document.getElementById('custom-confirm-ok').className = 'custom-confirm-btn ok';
-            document.getElementById('custom-confirm-cancel').style.display = '';
-            overlay.classList.add('show');
 
-            // Clone untuk hapus event lama
+            // Clone untuk hapus event lama (SEBELUM show overlay)
             const oldOk = document.getElementById('custom-confirm-ok');
             const newOk = oldOk.cloneNode(true);
             oldOk.parentNode.replaceChild(newOk, oldOk);
@@ -1356,6 +1352,11 @@
             const newCancel = oldCancel.cloneNode(true);
             oldCancel.parentNode.replaceChild(newCancel, oldCancel);
 
+            // Set teks dan style SETELAH clone
+            document.getElementById('custom-confirm-ok').textContent = 'Ya, Hapus';
+            document.getElementById('custom-confirm-ok').className = 'custom-confirm-btn ok';
+            document.getElementById('custom-confirm-cancel').style.display = '';
+
             document.getElementById('custom-confirm-ok').addEventListener('click', async () => {
                 overlay.classList.remove('show');
                 await onOk();
@@ -1363,6 +1364,8 @@
             document.getElementById('custom-confirm-cancel').addEventListener('click', () => {
                 overlay.classList.remove('show');
             });
+
+            overlay.classList.add('show');
         }
 
         function showCustomWarning(icon, title, msg) {
@@ -2027,22 +2030,26 @@
                 document.getElementById('custom-confirm-ok').textContent = 'Ya, Hapus';
                 document.getElementById('custom-confirm-ok').className = 'custom-confirm-btn ok';
                 document.getElementById('custom-confirm-cancel').style.display = '';
-                const btnOk = document.getElementById('custom-confirm-ok');
-                const btnCancel = document.getElementById('custom-confirm-cancel');
+
+                // Clone untuk hapus semua event listener lama
+                const oldOk = document.getElementById('custom-confirm-ok');
+                const newOk = oldOk.cloneNode(true);
+                oldOk.parentNode.replaceChild(newOk, oldOk);
+
+                const oldCancel = document.getElementById('custom-confirm-cancel');
+                const newCancel = oldCancel.cloneNode(true);
+                oldCancel.parentNode.replaceChild(newCancel, oldCancel);
 
                 overlay.classList.add('show');
 
-                const cleanup = (result) => {
+                document.getElementById('custom-confirm-ok').addEventListener('click', () => {
                     overlay.classList.remove('show');
-                    btnOk.removeEventListener('click', onOk);
-                    btnCancel.removeEventListener('click', onCancel);
-                    resolve(result);
-                };
-                const onOk = () => cleanup(true);
-                const onCancel = () => cleanup(false);
-
-                btnOk.addEventListener('click', onOk);
-                btnCancel.addEventListener('click', onCancel);
+                    resolve(true);
+                });
+                document.getElementById('custom-confirm-cancel').addEventListener('click', () => {
+                    overlay.classList.remove('show');
+                    resolve(false);
+                });
             });
         }
 
@@ -2157,7 +2164,7 @@
                             <span class="badge lunas" style="opacity:0.85;">
                                 CLOSED
                             </span>
-                            <button onclick="hapusSesiClosed([${bons.map(b=>b.id).join(',')}])" style="background:linear-gradient(145deg,#5a1f1f,#2a0c0c);color:#ff8a8a;border:1px solid rgba(255,107,107,0.3);border-radius:8px;padding:4px 10px;font-size:0.68rem;font-weight:700;cursor:pointer;letter-spacing:0.5px;">
+                            <button onclick="event.stopPropagation();hapusSesiClosed([${bons.map(b=>b.id).join(',')}])" style="background:linear-gradient(145deg,#5a1f1f,#2a0c0c);color:#ff8a8a;border:1px solid rgba(255,107,107,0.3);border-radius:8px;padding:4px 10px;font-size:0.68rem;font-weight:700;cursor:pointer;letter-spacing:0.5px;">
                                 🗑 HAPUS
                             </button>
                        </div>`;
