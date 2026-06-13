@@ -1073,7 +1073,7 @@
                 <div class="row-grid">
                     <div class="form-group">
                         <label><span class="label-chip">Harga Satuan</span></label>
-                        <input type="number" id="jumlah" class="form-control" placeholder="Rp">
+                        <input type="text" inputmode="numeric" id="jumlah" class="form-control" placeholder="Rp 0">
                     </div>
                     <div class="form-group">
                         <label><span class="label-chip">QTY</span></label>
@@ -1500,7 +1500,8 @@
         function autoFillHargaBarang() {
             const selectedJenis = document.getElementById('dropdown-barang').querySelector('.selected-value').getAttribute('data-value');
             const barangFound = masterBarang.find(b => b.jenis === selectedJenis);
-            document.getElementById('jumlah').value = barangFound ? barangFound.harga : '';
+            const input = document.getElementById('jumlah');
+            input.value = barangFound ? new Intl.NumberFormat('id-ID').format(barangFound.harga) : '';
         }
 
         // ===== MODE MANUAL JENIS BARANG =====
@@ -1775,7 +1776,7 @@
         function tambahKeReview() {
             const jenis = getJenisBarangSelected();
             const qty = parseFloat(document.getElementById('qty').value) || 0;
-            const jumlah = parseFloat(document.getElementById('jumlah').value) || 0;
+            const jumlah = fromRupiah(document.getElementById('jumlah').value);
 
             if(!jenis || qty <= 0 || jumlah <= 0) {
                 if (!jenis) showToast('warn','Perhatian', isModeManual ? 'Mohon ketik nama barang terlebih dahulu!' : 'Mohon pilih barang dari dropdown!');
@@ -1808,11 +1809,13 @@
                 grandTotalKotor += item.subtotal;
                 tbody.innerHTML += `
                     <tr>
-                        <td style="font-weight:600;">${item.jenis}</td>
+                        <td style="font-weight:600;">${index + 1}</td>
+                        <td>${item.jenis}</td>
                         <td>${item.qty} pcs</td>
-                        <td>Rp ${item.subtotal.toLocaleString('id-ID')}</td>
-                        <td>
-                            <button class="btn-delete-item" onclick="hapusItemReview(${index})">
+                        <td>Rp ${item.hargaSatuan.toLocaleString('id-ID')}</td>
+                        <td style="position:relative;">
+                            Rp ${item.subtotal.toLocaleString('id-ID')}
+                            <button class="btn-delete-item" onclick="hapusItemReview(${index})" style="display:block; margin: 2px auto 0;">
                                 🗑
                             </button>
                         </td>
@@ -2440,6 +2443,12 @@
             const hargaInput = document.getElementById('input-master-harga');
             if (hargaInput) {
                 hargaInput.addEventListener('input', function() { applyRupiahFormat(this); });
+            }
+
+            // Format rupiah untuk input harga satuan bon
+            const jumlahInput = document.getElementById('jumlah');
+            if (jumlahInput) {
+                jumlahInput.addEventListener('input', function() { applyRupiahFormat(this); });
             }
 
             // Format rupiah untuk input DP
