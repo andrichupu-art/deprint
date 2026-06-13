@@ -503,10 +503,10 @@
 
         /* ===== NOTA CETAK - REDESIGN ===== */
         .nota-cetak-wrapper {
-            background: linear-gradient(160deg, #0d3d1c 0%, #041f0d 60%, #061a0c 100%);
+            background: linear-gradient(160deg, #0f4a20 0%, #072a10 55%, #041a09 100%);
             padding: 0;
             border-radius: 24px;
-            border: 1.5px solid rgba(162, 213, 51, 0.35);
+            border: none;
             margin-bottom: 15px;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(162,213,51,0.12);
             position: relative;
@@ -612,6 +612,7 @@
             gap: 6px;
             font-size: 0.68rem;
             padding: 5px 0 7px;
+            border-top: 2px solid rgba(162,213,51,0.5);
             border-bottom: 1px solid rgba(162,213,51,0.2);
             margin-bottom: 2px;
         }
@@ -2524,7 +2525,7 @@
             await new Promise(r => setTimeout(r, 200));
 
             html2canvas(elemenNota, {
-                backgroundColor: '#041f0d',
+                backgroundColor: '#041a09',
                 scale: 2,
                 useCORS: true,
                 allowTaint: false,
