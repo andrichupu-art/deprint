@@ -218,30 +218,39 @@
         .badge-setting { background-color: rgba(162, 213, 51, 0.15); color: #FFFFFF; border-color: rgba(255, 255, 255, 0.2); }
 
         /* --- STYLING FORM & INPUT --- */
-        .form-group { margin-bottom: 14px; position: relative; }
+        .form-group { margin-bottom: 16px; position: relative; }
+
+        /* Label header hijau gradient seperti di foto */
         .form-group label {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 6px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            font-weight: 600;
+            font-size: 0.88rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            color: #041f0d;
+            background: linear-gradient(90deg, #a2d533 0%, #5cb800 60%, #3d8c00 100%);
+            padding: 9px 14px;
+            border-radius: 10px 10px 0 0;
+            margin-bottom: 0;
         }
-        .form-group label i { color: var(--accent-primary); opacity: 0.9; }
+        .form-group label i { color: #041f0d; opacity: 0.9; }
+
+        /* Form control lebih tinggi & font lebih besar */
         .form-control {
             width: 100%;
             background-color: var(--bg-surface);
             border: 1.5px solid var(--border-color);
-            border-radius: 12px;
-            padding: 11px 14px;
+            border-radius: 0 0 12px 12px;
+            padding: 15px 16px;
             color: var(--text-main);
-            font-size: 0.95rem;
+            font-size: 1.05rem;
+            font-weight: 500;
             transition: all 0.3s ease;
         }
-        .form-control:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 8px rgba(162, 213, 51, 0.2); }
+        .form-control:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 10px rgba(162, 213, 51, 0.25); }
         .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
         /* --- UI CUSTOM DROPDOWN ENGINE --- */
@@ -291,10 +300,10 @@
             border-color: var(--accent-primary);
         }
         .custom-option {
-            padding: 11px 14px;
+            padding: 14px 16px;
             color: var(--text-main);
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 1.05rem;
             transition: background 0.2s ease;
         }
         .custom-option:hover, .custom-option.selected {
@@ -309,9 +318,9 @@
             color: var(--text-main);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 12px;
-            padding: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            padding: 16px;
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
             width: 100%;
             margin-bottom: 5px;
@@ -350,13 +359,13 @@
             color: #041f0d;
             border: none;
             border-radius: 12px;
-            padding: 14px;
-            font-size: 1rem;
-            font-weight: 700;
+            padding: 18px;
+            font-size: 1.1rem;
+            font-weight: 800;
             cursor: pointer;
             width: 100%;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -796,6 +805,20 @@
         /* ===== LABEL CHIP (pengganti icon) ===== */
         .label-chip {
             display: inline-block;
+            background: transparent;
+            border: none;
+            color: #041f0d;
+            font-size: 0.88rem;
+            font-weight: 800;
+            padding: 0;
+            border-radius: 0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        /* Label chip di luar label (review header, setting) tetap hijau */
+        .review-header .label-chip,
+        .setting-box-title .label-chip,
+        .label-chip-sm {
             background: linear-gradient(135deg, #1a5c30 0%, #0f3d1f 100%);
             border: 1px solid rgba(162, 213, 51, 0.25);
             color: var(--accent-primary);
@@ -804,11 +827,6 @@
             padding: 3px 10px;
             border-radius: 8px;
             letter-spacing: 0.6px;
-            text-transform: uppercase;
-        }
-        .label-chip-sm {
-            font-size: 0.68rem;
-            padding: 2px 8px;
         }
         .chevron-icon {
             color: var(--text-muted);
@@ -1006,7 +1024,7 @@
             
             <!-- CUSTOM DROPDOWN 1: VENDOR -->
             <div class="form-group" style="margin-top: 5px;">
-                <label><span class="label-chip">Nama Vendor</span></label>
+                <label>Nama Vendor</label>
                 <div id="dropdown-vendor" class="custom-select-container">
                     <div class="form-control custom-select-trigger" onclick="toggleCustomDropdown('dropdown-vendor')">
                         <span class="selected-value">-- Pilih Vendor --</span>
@@ -1021,15 +1039,15 @@
                 <!-- CUSTOM DROPDOWN 2: JENIS BARANG -->
                 <div class="form-group">
                     <label style="justify-content: space-between;">
-                        <span><span class="label-chip">Jenis Barang</span></span>
+                        <span>Jenis Order</span>
                         <button type="button" id="btn-toggle-manual" onclick="toggleModeManual()" style="
-                            background: rgba(162,213,51,0.12);
-                            border: 1px solid rgba(162,213,51,0.35);
+                            background: rgba(4,31,13,0.25);
+                            border: 1px solid rgba(4,31,13,0.35);
                             border-radius: 20px;
-                            color: var(--accent-primary);
-                            font-size: 0.7rem;
-                            font-weight: 700;
-                            padding: 3px 10px;
+                            color: #041f0d;
+                            font-size: 0.78rem;
+                            font-weight: 800;
+                            padding: 3px 12px;
                             cursor: pointer;
                             letter-spacing: 0.5px;
                             display: flex;
@@ -1059,11 +1077,11 @@
 
                 <div class="row-grid">
                     <div class="form-group">
-                        <label><span class="label-chip">Qty</span></label>
+                        <label>QTY</label>
                         <input type="number" id="qty" class="form-control" placeholder="0">
                     </div>
                     <div class="form-group">
-                        <label><span class="label-chip">Harga Satuan</span></label>
+                        <label>Harga Satuan</label>
                         <input type="number" id="jumlah" class="form-control" placeholder="Rp">
                     </div>
                 </div>
@@ -1091,18 +1109,18 @@
 
             <div class="row-grid">
                 <div class="form-group">
-                    <label><span class="label-chip">Uang Muka (DP)</span></label>
+                    <label>Uang Muka (DP)</label>
                     <input type="text" inputmode="numeric" id="dp" class="form-control" placeholder="Rp 0">
                 </div>
                 <div class="form-group">
-                    <label><span class="label-chip">Sisa Tagihan</span></label>
+                    <label>Sisa Tagihan</label>
                     <input type="text" id="total" class="form-control" style="background-color: var(--bg-primary); font-weight: bold; color: var(--accent-pending);" readonly value="0">
                 </div>
             </div>
             
             <!-- CUSTOM DROPDOWN 3: STATUS PEMBAYARAN -->
             <div class="form-group" style="margin-bottom: 22px;">
-                <label><span class="label-chip">Status Pembayaran</span></label>
+                <label>Status Pembayaran</label>
                 <div id="dropdown-status" class="custom-select-container">
                     <div class="form-control custom-select-trigger" onclick="toggleCustomDropdown('dropdown-status')">
                         <span class="selected-value" data-value="PENDING">PENDING</span>
