@@ -2473,12 +2473,38 @@
 
             showToast('info','Memproses...','Sedang menyiapkan gambar...', 3000);
 
-            // Inject style override: hapus semua SVG background pattern
+            // Inject style override untuk export:
+            // - Hapus border-radius agar tidak ada sudut putih di JPEG
+            // - Hapus SVG background pattern (bukan gradient) yang tidak bisa dirender canvas
+            // - Pertahankan background gradient tiap section agar tidak flat hitam
             const styleOverride = document.createElement('style');
             styleOverride.id = 'html2canvas-override';
             styleOverride.textContent = `
-                #nota-target-${bonId}, #nota-target-${bonId} * { background-image: none !important; }
-                #nota-target-${bonId} { background: linear-gradient(160deg, #0d3d1c 0%, #041f0d 60%, #061a0c 100%) !important; }
+                #nota-target-${bonId} {
+                    border-radius: 0 !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                    background: linear-gradient(160deg, #0d3d1c 0%, #041f0d 60%, #061a0c 100%) !important;
+                }
+                #nota-target-${bonId}::before,
+                #nota-target-${bonId}::after { display: none !important; }
+                #nota-target-${bonId} .bon-brand-section {
+                    background: rgba(0,0,0,0.18) !important;
+                    border-radius: 0 !important;
+                }
+                #nota-target-${bonId} .bon-items-section {
+                    background: rgba(11,58,26,0.25) !important;
+                }
+                #nota-target-${bonId} .bon-calculation-box {
+                    background: rgba(0,0,0,0.28) !important;
+                    border-radius: 0 !important;
+                }
+                #nota-target-${bonId} .bon-status-row {
+                    background: rgba(52,211,153,0.08) !important;
+                }
+                #nota-target-${bonId} .bon-vendor-hero {
+                    background: rgba(13,61,28,0.4) !important;
+                }
             `;
             document.head.appendChild(styleOverride);
 
@@ -2514,6 +2540,23 @@
                             cImg.src = _logoBase64Cache[cachedKey];
                         }
                     });
+                    // Fix border-radius & warna section pada clone
+                    const clonedNota = clonedDoc.getElementById(`nota-target-${bonId}`);
+                    if (clonedNota) {
+                        clonedNota.style.borderRadius = '0';
+                        clonedNota.style.border = 'none';
+                        clonedNota.style.boxShadow = 'none';
+                        const brandSec = clonedNota.querySelector('.bon-brand-section');
+                        if (brandSec) { brandSec.style.background = 'rgba(0,0,0,0.18)'; brandSec.style.borderRadius = '0'; }
+                        const itemsSec = clonedNota.querySelector('.bon-items-section');
+                        if (itemsSec) itemsSec.style.background = 'rgba(11,58,26,0.25)';
+                        const calcBox = clonedNota.querySelector('.bon-calculation-box');
+                        if (calcBox) { calcBox.style.background = 'rgba(0,0,0,0.28)'; calcBox.style.borderRadius = '0'; }
+                        const statusRow = clonedNota.querySelector('.bon-status-row');
+                        if (statusRow) statusRow.style.background = 'rgba(52,211,153,0.08)';
+                        const vendorHero = clonedNota.querySelector('.bon-vendor-hero');
+                        if (vendorHero) vendorHero.style.background = 'rgba(13,61,28,0.4)';
+                    }
                 }
             }).then(canvas => {
                 const override = document.getElementById('html2canvas-override');
