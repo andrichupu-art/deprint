@@ -571,7 +571,7 @@
         }
         .bon-status-row {
             padding: 10px 24px;
-            background: rgba(52,211,153,0.06);
+            background: rgba(0,0,0,0.55);
             border-bottom: 1px solid rgba(255,255,255,0.04);
             display: flex;
             align-items: center;
@@ -2501,21 +2501,21 @@
                 #nota-target-${bonId}::after { display: none !important; }
                 #nota-target-${bonId} * { background-image: none !important; }
                 #nota-target-${bonId} .bon-brand-section {
-                    background: rgba(0,0,0,0.22) !important;
+                    background: rgba(5,40,16,0.85) !important;
                     border-radius: 0 !important;
                 }
                 #nota-target-${bonId} .bon-items-section {
-                    background: rgba(11,58,26,0.3) !important;
+                    background: rgba(15,80,35,0.55) !important;
                 }
                 #nota-target-${bonId} .bon-calculation-box {
-                    background: rgba(0,0,0,0.28) !important;
+                    background: rgba(4,28,12,0.75) !important;
                     border-radius: 0 !important;
                 }
                 #nota-target-${bonId} .bon-status-row {
-                    background: rgba(52,211,153,0.08) !important;
+                    background: rgba(0,0,0,0.55) !important;
                 }
                 #nota-target-${bonId} .bon-vendor-hero {
-                    background: rgba(13,61,28,0.4) !important;
+                    background: rgba(18,80,38,0.65) !important;
                 }
             `;
             document.head.appendChild(styleOverride);
@@ -2568,15 +2568,15 @@
                         clonedNota.style.border = 'none';
                         clonedNota.style.boxShadow = 'none';
                         const brandSec = clonedNota.querySelector('.bon-brand-section');
-                        if (brandSec) { brandSec.style.background = 'rgba(0,0,0,0.22)'; brandSec.style.backgroundImage = 'none'; brandSec.style.borderRadius = '0'; }
+                        if (brandSec) { brandSec.style.background = 'rgba(5,40,16,0.85)'; brandSec.style.backgroundImage = 'none'; brandSec.style.borderRadius = '0'; }
                         const itemsSec = clonedNota.querySelector('.bon-items-section');
-                        if (itemsSec) { itemsSec.style.background = 'rgba(11,58,26,0.3)'; itemsSec.style.backgroundImage = 'none'; }
+                        if (itemsSec) { itemsSec.style.background = 'rgba(15,80,35,0.55)'; itemsSec.style.backgroundImage = 'none'; }
                         const calcBox = clonedNota.querySelector('.bon-calculation-box');
-                        if (calcBox) { calcBox.style.background = 'rgba(0,0,0,0.28)'; calcBox.style.backgroundImage = 'none'; calcBox.style.borderRadius = '0'; }
+                        if (calcBox) { calcBox.style.background = 'rgba(4,28,12,0.75)'; calcBox.style.backgroundImage = 'none'; calcBox.style.borderRadius = '0'; }
                         const statusRow = clonedNota.querySelector('.bon-status-row');
-                        if (statusRow) { statusRow.style.background = 'rgba(52,211,153,0.08)'; statusRow.style.backgroundImage = 'none'; }
+                        if (statusRow) { statusRow.style.background = 'rgba(0,0,0,0.55)'; statusRow.style.backgroundImage = 'none'; }
                         const vendorHero = clonedNota.querySelector('.bon-vendor-hero');
-                        if (vendorHero) { vendorHero.style.background = 'rgba(13,61,28,0.4)'; vendorHero.style.backgroundImage = 'none'; }
+                        if (vendorHero) { vendorHero.style.background = 'rgba(18,80,38,0.65)'; vendorHero.style.backgroundImage = 'none'; }
                     }
                 }
             }).then(canvas => {
@@ -2600,12 +2600,54 @@
                     return;
                 }
 
-                const gambarDataUri = canvas.toDataURL("image/jpeg", 0.92);
-                const linkDownload = document.createElement('a');
-                linkDownload.href = gambarDataUri;
-                linkDownload.download = `DEPRINT_${namaVendor.toUpperCase()}_${bonId}.jpeg`;
-                linkDownload.click();
-                showToast('success','Tersimpan!','File JPEG berhasil diunduh.');
+                // Bungkus canvas dengan padding + rounded corner
+                const padding = 40;
+                const radius = 36;
+                const finalCanvas = document.createElement('canvas');
+                finalCanvas.width = canvas.width + padding * 2;
+                finalCanvas.height = canvas.height + padding * 2;
+                const ctx = finalCanvas.getContext('2d');
+
+                // Background luar (warna gelap sama seperti tema app)
+                ctx.fillStyle = '#041a09';
+                ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+
+                // === LAYER 1: gambar konten invoice dengan rounded clip ===
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(padding + radius, padding);
+                ctx.lineTo(finalCanvas.width - padding - radius, padding);
+                ctx.quadraticCurveTo(finalCanvas.width - padding, padding, finalCanvas.width - padding, padding + radius);
+                ctx.lineTo(finalCanvas.width - padding, finalCanvas.height - padding - radius);
+                ctx.quadraticCurveTo(finalCanvas.width - padding, finalCanvas.height - padding, finalCanvas.width - padding - radius, finalCanvas.height - padding);
+                ctx.lineTo(padding + radius, finalCanvas.height - padding);
+                ctx.quadraticCurveTo(padding, finalCanvas.height - padding, padding, finalCanvas.height - padding - radius);
+                ctx.lineTo(padding, padding + radius);
+                ctx.quadraticCurveTo(padding, padding, padding + radius, padding);
+                ctx.closePath();
+                ctx.clip();
+                ctx.drawImage(canvas, padding, padding);
+                ctx.restore(); // clip dilepas setelah restore
+
+                // === LAYER 2: garis gradasi atas (pengganti ::before) — di luar clip ===
+                const lineH = 6; // 3px × scale 2
+                const lineGrad = ctx.createLinearGradient(padding, 0, finalCanvas.width - padding, 0);
+                lineGrad.addColorStop(0.05, 'rgba(162,213,51,0)');
+                lineGrad.addColorStop(0.40, '#a2d533');
+                lineGrad.addColorStop(0.60, '#34d399');
+                lineGrad.addColorStop(0.95, 'rgba(52,211,153,0)');
+                ctx.fillStyle = lineGrad;
+                ctx.fillRect(padding, padding, finalCanvas.width - padding * 2, lineH);
+
+                finalCanvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const linkDownload = document.createElement('a');
+                    linkDownload.href = url;
+                    linkDownload.download = `DEPRINT_${namaVendor.toUpperCase()}_${bonId}.jpeg`;
+                    linkDownload.click();
+                    setTimeout(() => URL.revokeObjectURL(url), 5000);
+                    showToast('success','Tersimpan!','File JPEG berhasil diunduh.');
+                }, 'image/jpeg', 0.92);
             }).catch(err => {
                 const override = document.getElementById('html2canvas-override');
                 if (override) override.remove();
