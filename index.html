@@ -356,15 +356,15 @@
             align-items: center;
             gap: 6px;
         }
-        .review-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; table-layout: fixed; }
-        .review-table th { color: var(--text-muted); text-align: center; padding: 8px 4px; border-bottom: 1px solid var(--border-color); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.5px; }
-        .review-table td { padding: 10px 4px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.9rem; text-align: center; white-space: nowrap; overflow: hidden; }
+        .review-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; table-layout: fixed; }
+        .review-table th { color: var(--text-muted); text-align: center; padding: 8px 4px; border-bottom: 1px solid var(--border-color); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; }
+        .review-table td { padding: 8px 3px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.78rem; text-align: center; white-space: nowrap; overflow: hidden; }
         .review-table th:nth-child(1), .review-table td:nth-child(1) { width: 7%; }
         .review-table th:nth-child(2), .review-table td:nth-child(2) { width: 28%; text-align: center; }
         .review-table th:nth-child(3), .review-table td:nth-child(3) { width: 12%; }
         .review-table th:nth-child(4), .review-table td:nth-child(4) { width: 22%; }
         .review-table th:nth-child(5), .review-table td:nth-child(5) { width: 31%; }
-        .btn-delete-item { background: none; border: none; color: #EF4444; cursor: pointer; padding: 0 0 0 5px; vertical-align: middle; font-size: 0.85rem; }
+        .btn-delete-item { background: none; border: none; color: #EF4444; cursor: pointer; padding: 0 0 0 4px; vertical-align: middle; font-size: 0.8rem; }
 
         .btn-submit {
             background-color: var(--accent-primary);
@@ -1073,7 +1073,7 @@
                 <div class="row-grid">
                     <div class="form-group">
                         <label><span class="label-chip">Harga Satuan</span></label>
-                        <input type="text" inputmode="numeric" id="jumlah" class="form-control" placeholder="Rp 0">
+                        <input type="text" inputmode="numeric" id="jumlah" class="form-control" placeholder="Rp 0" readonly style="opacity:0.6; cursor:not-allowed;">
                     </div>
                     <div class="form-group">
                         <label><span class="label-chip">QTY</span></label>
@@ -1514,12 +1514,18 @@
             const label = document.getElementById('label-toggle-manual');
             const track = document.getElementById('toggle-switch-track');
             const thumb = document.getElementById('toggle-switch-thumb');
+            const jumlahInput = document.getElementById('jumlah');
 
             if (isModeManual) {
                 wrapperDropdown.style.display = 'none';
                 wrapperManual.style.display = 'block';
                 document.getElementById('input-manual-barang').value = '';
                 setTimeout(() => document.getElementById('input-manual-barang').focus(), 100);
+                // Unlock harga satuan
+                jumlahInput.removeAttribute('readonly');
+                jumlahInput.style.opacity = '1';
+                jumlahInput.style.cursor = 'text';
+                jumlahInput.value = '';
                 // Switch ON
                 track.style.background = 'rgba(162,213,51,0.25)';
                 track.style.borderColor = 'var(--accent-primary)';
@@ -1530,6 +1536,11 @@
             } else {
                 wrapperDropdown.style.display = 'block';
                 wrapperManual.style.display = 'none';
+                // Lock harga satuan kembali
+                jumlahInput.setAttribute('readonly', true);
+                jumlahInput.style.opacity = '0.6';
+                jumlahInput.style.cursor = 'not-allowed';
+                jumlahInput.value = '';
                 // Switch OFF
                 track.style.background = 'var(--bg-primary)';
                 track.style.borderColor = 'var(--border-color)';
