@@ -2413,25 +2413,54 @@
         }
 
 
-        // Konversi img src ke base64 untuk avoid tainted canvas
+        // Cache base64 logo agar tidak perlu konversi ulang saat export
+        let _logoBase64Cache = {};
+
+        // Preload gambar ke base64 — tunggu sampai benar-benar loaded & dimensi > 0
         function imgToBase64(src) {
             return new Promise((resolve) => {
+                // Kembalikan dari cache jika sudah ada
+                if (_logoBase64Cache[src]) {
+                    resolve(_logoBase64Cache[src]);
+                    return;
+                }
                 const img = new Image();
                 img.crossOrigin = 'anonymous';
                 img.onload = function() {
                     try {
+                        const w = img.naturalWidth || img.width;
+                        const h = img.naturalHeight || img.height;
+                        // Jika dimensi 0, fallback ke src asli tanpa konversi
+                        if (w === 0 || h === 0) {
+                            resolve(src);
+                            return;
+                        }
                         const canvas = document.createElement('canvas');
-                        canvas.width = img.naturalWidth || img.width;
-                        canvas.height = img.naturalHeight || img.height;
+                        canvas.width = w;
+                        canvas.height = h;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0);
-                        resolve(canvas.toDataURL('image/png'));
+                        const b64 = canvas.toDataURL('image/png');
+                        _logoBase64Cache[src] = b64; // simpan di cache
+                        resolve(b64);
                     } catch(e) {
                         resolve(src); // fallback ke src asli
                     }
                 };
                 img.onerror = () => resolve(src);
-                img.src = src + '?t=' + Date.now();
+                // Tambahkan timestamp hanya jika belum base64
+                img.src = src.startsWith('data:') ? src : (src + '?t=' + Date.now());
+            });
+        }
+
+        // Preload logo saat app pertama kali load
+        function preloadLogoAssets() {
+            ['LOGO_SJ.png', 'logo_deprint.png'].forEach(src => {
+                imgToBase64(src).then(b64 => {
+                    if (b64 && b64.startsWith('data:')) {
+                        _logoBase64Cache[src] = b64;
+                    }
+                });
             });
         }
 
@@ -2453,26 +2482,47 @@
             `;
             document.head.appendChild(styleOverride);
 
-            // Konversi semua <img> di dalam nota ke base64 dulu
+            // Ganti semua <img> di dalam nota ke base64 — pakai cache jika tersedia
             const imgs = elemenNota.querySelectorAll('img');
+            const originalSrcs = new Map();
             for (const img of imgs) {
                 if (img.src && !img.src.startsWith('data:')) {
+                    originalSrcs.set(img, img.src); // simpan src asli untuk restore
                     const b64 = await imgToBase64(img.src);
-                    img.src = b64;
+                    if (b64 && b64.startsWith('data:')) {
+                        img.src = b64; // hanya ganti jika berhasil jadi base64
+                    }
                 }
             }
 
-            await new Promise(r => setTimeout(r, 150));
+            await new Promise(r => setTimeout(r, 200));
 
             html2canvas(elemenNota, {
                 backgroundColor: '#041f0d',
                 scale: 2,
-                useCORS: false,
-                allowTaint: true,
+                useCORS: true,
+                allowTaint: false,
                 logging: false,
+                imageTimeout: 15000,
+                onclone: (clonedDoc) => {
+                    // Pastikan semua img di clone sudah pakai base64 dari cache
+                    const clonedImgs = clonedDoc.querySelectorAll(`#nota-target-${bonId} img`);
+                    clonedImgs.forEach(cImg => {
+                        const filename = cImg.src.split('/').pop().split('?')[0];
+                        const cachedKey = Object.keys(_logoBase64Cache).find(k => k.includes(filename));
+                        if (cachedKey && _logoBase64Cache[cachedKey].startsWith('data:')) {
+                            cImg.src = _logoBase64Cache[cachedKey];
+                        }
+                    });
+                }
             }).then(canvas => {
                 const override = document.getElementById('html2canvas-override');
                 if (override) override.remove();
+
+                // Restore src asli setelah capture
+                for (const [img, origSrc] of originalSrcs) {
+                    img.src = origSrc;
+                }
 
                 if (canvas.width === 0 || canvas.height === 0) {
                     showToast('error','Gagal Export','Ukuran canvas 0 — pastikan nota sudah terbuka.', 5000);
@@ -2488,6 +2538,10 @@
             }).catch(err => {
                 const override = document.getElementById('html2canvas-override');
                 if (override) override.remove();
+                // Restore src asli jika error
+                for (const [img, origSrc] of originalSrcs) {
+                    img.src = origSrc;
+                }
                 showToast('error','Gagal Export','Gagal membuat gambar: ' + err.message, 5000);
             });
         }
@@ -2511,6 +2565,9 @@
 
         // ===== AUTO UPPERCASE & RUPIAH FORMAT ON INPUTS =====
         document.addEventListener('DOMContentLoaded', function() {
+            // Preload logo assets ke base64 cache sejak awal
+            preloadLogoAssets();
+
             // Uppercase untuk input text
             const textInputIds = ['input-master-vendor', 'input-master-jenis'];
             textInputIds.forEach(id => {
