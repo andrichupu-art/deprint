@@ -2485,16 +2485,18 @@
                     border-radius: 0 !important;
                     border: none !important;
                     box-shadow: none !important;
-                    background: linear-gradient(160deg, #0d3d1c 0%, #041f0d 60%, #061a0c 100%) !important;
+                    background-image: none !important;
+                    background-color: #072a10 !important;
                 }
                 #nota-target-${bonId}::before,
                 #nota-target-${bonId}::after { display: none !important; }
+                #nota-target-${bonId} * { background-image: none !important; }
                 #nota-target-${bonId} .bon-brand-section {
-                    background: rgba(0,0,0,0.18) !important;
+                    background: rgba(0,0,0,0.22) !important;
                     border-radius: 0 !important;
                 }
                 #nota-target-${bonId} .bon-items-section {
-                    background: rgba(11,58,26,0.25) !important;
+                    background: rgba(11,58,26,0.3) !important;
                 }
                 #nota-target-${bonId} .bon-calculation-box {
                     background: rgba(0,0,0,0.28) !important;
@@ -2541,22 +2543,31 @@
                             cImg.src = _logoBase64Cache[cachedKey];
                         }
                     });
-                    // Fix border-radius & warna section pada clone
+                    // Fix border-radius, hapus SVG pattern, fix warna section pada clone
                     const clonedNota = clonedDoc.getElementById(`nota-target-${bonId}`);
                     if (clonedNota) {
+                        // Matikan semua background-image SVG pattern di seluruh elemen clone
+                        clonedNota.querySelectorAll('*').forEach(el => {
+                            const bg = window.getComputedStyle(el).backgroundImage;
+                            if (bg && bg.includes('svg')) {
+                                el.style.backgroundImage = 'none';
+                            }
+                        });
+                        clonedNota.style.backgroundImage = 'none';
+                        clonedNota.style.backgroundColor = '#072a10';
                         clonedNota.style.borderRadius = '0';
                         clonedNota.style.border = 'none';
                         clonedNota.style.boxShadow = 'none';
                         const brandSec = clonedNota.querySelector('.bon-brand-section');
-                        if (brandSec) { brandSec.style.background = 'rgba(0,0,0,0.18)'; brandSec.style.borderRadius = '0'; }
+                        if (brandSec) { brandSec.style.background = 'rgba(0,0,0,0.22)'; brandSec.style.backgroundImage = 'none'; brandSec.style.borderRadius = '0'; }
                         const itemsSec = clonedNota.querySelector('.bon-items-section');
-                        if (itemsSec) itemsSec.style.background = 'rgba(11,58,26,0.25)';
+                        if (itemsSec) { itemsSec.style.background = 'rgba(11,58,26,0.3)'; itemsSec.style.backgroundImage = 'none'; }
                         const calcBox = clonedNota.querySelector('.bon-calculation-box');
-                        if (calcBox) { calcBox.style.background = 'rgba(0,0,0,0.28)'; calcBox.style.borderRadius = '0'; }
+                        if (calcBox) { calcBox.style.background = 'rgba(0,0,0,0.28)'; calcBox.style.backgroundImage = 'none'; calcBox.style.borderRadius = '0'; }
                         const statusRow = clonedNota.querySelector('.bon-status-row');
-                        if (statusRow) statusRow.style.background = 'rgba(52,211,153,0.08)';
+                        if (statusRow) { statusRow.style.background = 'rgba(52,211,153,0.08)'; statusRow.style.backgroundImage = 'none'; }
                         const vendorHero = clonedNota.querySelector('.bon-vendor-hero');
-                        if (vendorHero) vendorHero.style.background = 'rgba(13,61,28,0.4)';
+                        if (vendorHero) { vendorHero.style.background = 'rgba(13,61,28,0.4)'; vendorHero.style.backgroundImage = 'none'; }
                     }
                 }
             }).then(canvas => {
