@@ -574,7 +574,7 @@
         }
         .bon-status-row {
             padding: 10px 24px;
-            background: rgba(0,0,0,0.55);
+            background: rgba(4,28,12,0.75);
             border-bottom: 1px solid rgba(255,255,255,0.04);
             display: flex;
             align-items: center;
@@ -2518,7 +2518,8 @@
                     border-radius: 0 !important;
                 }
                 #nota-target-${bonId} .bon-status-row {
-                    background: rgba(0,0,0,0.55) !important;
+                    background: rgba(4,28,12,0.75) !important;
+                    border-radius: 0 !important;
                 }
                 #nota-target-${bonId} .bon-vendor-hero {
                     background: rgba(18,80,38,0.65) !important;
@@ -2583,7 +2584,7 @@
                         const calcBox = clonedNota.querySelector('.bon-calculation-box');
                         if (calcBox) { calcBox.style.background = 'rgba(4,28,12,0.75)'; calcBox.style.backgroundImage = 'none'; calcBox.style.borderRadius = '0'; }
                         const statusRow = clonedNota.querySelector('.bon-status-row');
-                        if (statusRow) { statusRow.style.background = 'rgba(0,0,0,0.55)'; statusRow.style.backgroundImage = 'none'; }
+                        if (statusRow) { statusRow.style.background = 'rgba(4,28,12,0.75)'; statusRow.style.backgroundImage = 'none'; }
                         const vendorHero = clonedNota.querySelector('.bon-vendor-hero');
                         if (vendorHero) { vendorHero.style.background = 'rgba(18,80,38,0.65)'; vendorHero.style.backgroundImage = 'none'; }
                     }
