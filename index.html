@@ -1112,8 +1112,8 @@
                             <span class="chevron-icon">▾</span>
                         </div>
                         <div class="custom-options-menu">
-                            <div class="custom-option selected" onclick="selectCustomOption('dropdown-status', 'PENDING', 'PENDING')">PENDING</div>
-                            <div class="custom-option" onclick="selectCustomOption('dropdown-status', 'LUNAS', 'LUNAS')">LUNAS</div>
+                            <div class="custom-option selected" onclick="selectCustomOption('dropdown-status', 'PENDING', 'PENDING', onStatusChange)">PENDING</div>
+                            <div class="custom-option" onclick="selectCustomOption('dropdown-status', 'LUNAS', 'LUNAS', onStatusChange)">LUNAS</div>
                         </div>
                     </div>
                 </div>
@@ -1460,6 +1460,22 @@
             container.classList.remove('dropdown-active');
 
             if(additonalCallback) additonalCallback();
+        }
+
+        function onStatusChange() {
+            const status = document.getElementById('dropdown-status').querySelector('.selected-value').getAttribute('data-value');
+            const dpInput = document.getElementById('dp');
+            if (status === 'LUNAS') {
+                dpInput.setAttribute('readonly', true);
+                dpInput.style.opacity = '0.6';
+                dpInput.style.cursor = 'not-allowed';
+                dpInput.value = '';
+                hitungFinansialAkhir();
+            } else {
+                dpInput.removeAttribute('readonly');
+                dpInput.style.opacity = '1';
+                dpInput.style.cursor = 'text';
+            }
         }
 
         // Tutup otomatis dropdown jika user menyentuh luar area komponen dropdown
