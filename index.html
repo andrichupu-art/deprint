@@ -1292,7 +1292,7 @@
                     <input type="number" id="modal-input-pelunasan" class="form-control" placeholder="Rp 0" style="border-color:var(--accent-primary); font-size:1.1rem; font-weight:bold;">
                 </div>
                 <button type="button" class="btn-submit" style="background-color:var(--accent-success);" onclick="eksekusiPelunasanPopup()">
-                    Sah-kan & Update Supabase
+                    SIMPAN PELUNASAN
                 </button>
             </div>
         </div>
@@ -1995,8 +1995,7 @@
                 tutupPopup();
                 _pelunasanVendorTarget = null;
                 await fetchAllFromSupabase();
-                cetakFreshFromPelunasan = true;
-                switchTab('cetak-tab', document.querySelectorAll('.nav-item')[3]);
+                renderRiwayat();
             } else {
                 const bon = databaseBon.find(b => b.id == bonId);
                 if (bon) {
@@ -2009,8 +2008,8 @@
 
                     showToast('success','Pelunasan Sah! ✅','Status BON telah diubah menjadi LUNAS!');
                     tutupPopup();
-                    cetakFreshFromPelunasan = true;
-                    switchTab('cetak-tab', document.querySelectorAll('.nav-item')[3]);
+                    await fetchAllFromSupabase();
+                    renderRiwayat();
                 }
             }
         }
