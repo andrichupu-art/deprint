@@ -1292,7 +1292,7 @@
                     <input type="number" id="modal-input-pelunasan" class="form-control" placeholder="Rp 0" style="border-color:var(--accent-primary); font-size:1.1rem; font-weight:bold;">
                 </div>
                 <button type="button" class="btn-submit" style="background-color:var(--accent-success);" onclick="eksekusiPelunasanPopup()">
-                    SIMPAN PELUNASAN
+                    Sah-kan & Update Supabase
                 </button>
             </div>
         </div>
@@ -2413,19 +2413,82 @@
         }
 
 
-        function downloadBonSebagaiJPEG(bonId, namaVendor) {
+        // Konversi img src ke base64 untuk avoid tainted canvas
+        function imgToBase64(src) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = function() {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.naturalWidth || img.width;
+                        canvas.height = img.naturalHeight || img.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        resolve(canvas.toDataURL('image/png'));
+                    } catch(e) {
+                        resolve(src); // fallback ke src asli
+                    }
+                };
+                img.onerror = () => resolve(src);
+                img.src = src + '?t=' + Date.now();
+            });
+        }
+
+        async function downloadBonSebagaiJPEG(bonId, namaVendor) {
             const elemenNota = document.getElementById(`nota-target-${bonId}`);
+            if (!elemenNota) {
+                showToast('error','Gagal Export','Elemen nota tidak ditemukan.', 4000);
+                return;
+            }
+
+            showToast('info','Memproses...','Sedang menyiapkan gambar...', 3000);
+
+            // Inject style override: hapus semua SVG background pattern
+            const styleOverride = document.createElement('style');
+            styleOverride.id = 'html2canvas-override';
+            styleOverride.textContent = `
+                #nota-target-${bonId}, #nota-target-${bonId} * { background-image: none !important; }
+                #nota-target-${bonId} { background: linear-gradient(160deg, #0d3d1c 0%, #041f0d 60%, #061a0c 100%) !important; }
+            `;
+            document.head.appendChild(styleOverride);
+
+            // Konversi semua <img> di dalam nota ke base64 dulu
+            const imgs = elemenNota.querySelectorAll('img');
+            for (const img of imgs) {
+                if (img.src && !img.src.startsWith('data:')) {
+                    const b64 = await imgToBase64(img.src);
+                    img.src = b64;
+                }
+            }
+
+            await new Promise(r => setTimeout(r, 150));
+
             html2canvas(elemenNota, {
-                backgroundColor: null,
-                scale: 2
+                backgroundColor: '#041f0d',
+                scale: 2,
+                useCORS: false,
+                allowTaint: true,
+                logging: false,
             }).then(canvas => {
-                const gambarDataUri = canvas.toDataURL("image/jpeg", 0.9);
+                const override = document.getElementById('html2canvas-override');
+                if (override) override.remove();
+
+                if (canvas.width === 0 || canvas.height === 0) {
+                    showToast('error','Gagal Export','Ukuran canvas 0 — pastikan nota sudah terbuka.', 5000);
+                    return;
+                }
+
+                const gambarDataUri = canvas.toDataURL("image/jpeg", 0.92);
                 const linkDownload = document.createElement('a');
                 linkDownload.href = gambarDataUri;
                 linkDownload.download = `DEPRINT_${namaVendor.toUpperCase()}_${bonId}.jpeg`;
                 linkDownload.click();
+                showToast('success','Tersimpan!','File JPEG berhasil diunduh.');
             }).catch(err => {
-                showToast('error','Gagal Export','Gagal membuat gambar: ' + err, 5000);
+                const override = document.getElementById('html2canvas-override');
+                if (override) override.remove();
+                showToast('error','Gagal Export','Gagal membuat gambar: ' + err.message, 5000);
             });
         }
         function exitToWelcome() {
