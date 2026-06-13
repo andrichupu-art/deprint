@@ -218,40 +218,46 @@
         .badge-setting { background-color: rgba(162, 213, 51, 0.15); color: #FFFFFF; border-color: rgba(255, 255, 255, 0.2); }
 
         /* --- STYLING FORM & INPUT --- */
-        .form-group { margin-bottom: 16px; position: relative; }
-
-        /* Label header hijau gradient seperti di foto */
+        .form-group {
+            margin-bottom: 18px;
+            position: relative;
+            padding-top: 20px;
+        }
         .form-group label {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 6px;
-            font-size: 0.88rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #041f0d;
-            background: linear-gradient(90deg, #a2d533 0%, #5cb800 60%, #3d8c00 100%);
-            padding: 9px 14px;
-            border-radius: 10px 10px 0 0;
-            margin-bottom: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 5;
+            margin: 0;
+            padding: 0 2px;
+            pointer-events: none;
         }
-        .form-group label i { color: #041f0d; opacity: 0.9; }
-
-        /* Form control lebih tinggi & font lebih besar */
+        .form-group label i { color: var(--accent-primary); opacity: 0.9; }
         .form-control {
             width: 100%;
             background-color: var(--bg-surface);
-            border: 1.5px solid var(--border-color);
-            border-radius: 0 0 12px 12px;
-            padding: 15px 16px;
+            border: 2.5px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px 20px;
             color: var(--text-main);
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 500;
             transition: all 0.3s ease;
+            min-height: 64px;
+            display: block;
         }
-        .form-control:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 10px rgba(162, 213, 51, 0.25); }
-        .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-control::placeholder { color: rgba(161,161,170,0.5); }
+        /* Hide number input spinners */
+        .form-control[type=number]::-webkit-inner-spin-button,
+        .form-control[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        .form-control[type=number] { -moz-appearance: textfield; }
+        .form-control:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 12px rgba(162, 213, 51, 0.25); }
+        .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
         /* --- UI CUSTOM DROPDOWN ENGINE --- */
         .custom-select-container {
@@ -300,7 +306,7 @@
             border-color: var(--accent-primary);
         }
         .custom-option {
-            padding: 14px 16px;
+            padding: 14px 18px;
             color: var(--text-main);
             cursor: pointer;
             font-size: 1.05rem;
@@ -317,9 +323,9 @@
             background-color: var(--border-color);
             color: var(--text-main);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 16px;
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 700;
             cursor: pointer;
             width: 100%;
@@ -329,36 +335,42 @@
             justify-content: center;
             gap: 8px;
             transition: opacity 0.2s;
+            min-height: 56px;
         }
         .btn-secondary:active { opacity: 0.8; }
 
         .review-section {
             background-color: rgba(0, 0, 0, 0.2);
             border: 1px dashed var(--border-color);
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 15px;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
         }
         .review-header {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 700;
             color: var(--accent-primary);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             text-transform: uppercase;
             display: flex;
             align-items: center;
             gap: 6px;
         }
-        .review-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        .review-table th { color: var(--text-muted); text-align: left; padding: 6px 4px; border-bottom: 1px solid var(--border-color); }
-        .review-table td { padding: 8px 4px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .review-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; table-layout: fixed; }
+        .review-table th { color: var(--text-muted); text-align: center; padding: 8px 4px; border-bottom: 1px solid var(--border-color); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.5px; }
+        .review-table td { padding: 10px 4px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.9rem; text-align: center; }
+        .review-table th:nth-child(1), .review-table td:nth-child(1) { width: 10%; }
+        .review-table th:nth-child(2), .review-table td:nth-child(2) { width: 35%; text-align: center; }
+        .review-table th:nth-child(3), .review-table td:nth-child(3) { width: 12%; }
+        .review-table th:nth-child(4), .review-table td:nth-child(4) { width: 25%; }
+        .review-table th:nth-child(5), .review-table td:nth-child(5) { width: 18%; }
         .btn-delete-item { background: none; border: none; color: #EF4444; cursor: pointer; }
 
         .btn-submit {
             background-color: var(--accent-primary);
             color: #041f0d;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 18px;
             font-size: 1.1rem;
             font-weight: 800;
@@ -370,6 +382,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            min-height: 60px;
         }
 
         .setting-box-panel {
@@ -805,28 +818,21 @@
         /* ===== LABEL CHIP (pengganti icon) ===== */
         .label-chip {
             display: inline-block;
-            background: transparent;
-            border: none;
-            color: #041f0d;
+            background: linear-gradient(135deg, #1e6b35 0%, #0f3d1f 100%);
+            border: 2px solid rgba(162, 213, 51, 0.5);
+            color: var(--accent-primary);
             font-size: 0.88rem;
-            font-weight: 800;
-            padding: 0;
-            border-radius: 0;
+            font-weight: 900;
+            padding: 6px 16px;
+            border-radius: 12px;
             letter-spacing: 1px;
             text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
-        /* Label chip di luar label (review header, setting) tetap hijau */
-        .review-header .label-chip,
-        .setting-box-title .label-chip,
         .label-chip-sm {
-            background: linear-gradient(135deg, #1a5c30 0%, #0f3d1f 100%);
-            border: 1px solid rgba(162, 213, 51, 0.25);
-            color: var(--accent-primary);
-            font-size: 0.72rem;
-            font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 8px;
-            letter-spacing: 0.6px;
+            font-size: 0.78rem;
+            padding: 4px 12px;
+            border-width: 1.5px;
         }
         .chevron-icon {
             color: var(--text-muted);
@@ -1023,8 +1029,8 @@
             </div>
             
             <!-- CUSTOM DROPDOWN 1: VENDOR -->
-            <div class="form-group" style="margin-top: 5px;">
-                <label>Nama Vendor</label>
+            <div class="form-group" style="margin-top: 8px;">
+                <label><span class="label-chip">Nama Vendor</span></label>
                 <div id="dropdown-vendor" class="custom-select-container">
                     <div class="form-control custom-select-trigger" onclick="toggleCustomDropdown('dropdown-vendor')">
                         <span class="selected-value">-- Pilih Vendor --</span>
@@ -1034,31 +1040,20 @@
                 </div>
             </div>
 
-            <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 14px; border: 1px solid var(--border-color); margin-bottom: 14px;">
+            <div style="background: rgba(255,255,255,0.02); padding: 14px; border-radius: 16px; border: 2.5px solid var(--border-color); margin-bottom: 16px;">
                 
                 <!-- CUSTOM DROPDOWN 2: JENIS BARANG -->
-                <div class="form-group">
-                    <label style="justify-content: space-between;">
-                        <span>Jenis Order</span>
-                        <button type="button" id="btn-toggle-manual" onclick="toggleModeManual()" style="
-                            background: rgba(4,31,13,0.25);
-                            border: 1px solid rgba(4,31,13,0.35);
-                            border-radius: 20px;
-                            color: #041f0d;
-                            font-size: 0.78rem;
-                            font-weight: 800;
-                            padding: 3px 12px;
-                            cursor: pointer;
-                            letter-spacing: 0.5px;
-                            display: flex;
-                            align-items: center;
-                            gap: 4px;
-                            transition: all 0.2s;
-                            text-transform: uppercase;
-                        ">
-                            <span id="label-toggle-manual">Manual</span>
-                        </button>
-                    </label>
+                <div style="position: relative; margin-bottom: 14px;">
+                    <!-- Baris atas: chip label kiri + toggle kanan -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                        <span class="label-chip" style="min-width: 160px;">Jenis Order</span>
+                        <div onclick="toggleModeManual()" id="btn-toggle-manual" style="display:flex; align-items:center; gap:7px; cursor:pointer;">
+                            <span id="label-toggle-manual" style="font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.8px; transition:color 0.3s;">Manual</span>
+                            <div id="toggle-switch-track" style="width:42px; height:24px; background:var(--bg-primary); border:2px solid var(--border-color); border-radius:999px; position:relative; transition:background 0.3s, border-color 0.3s; flex-shrink:0;">
+                                <div id="toggle-switch-thumb" style="position:absolute; top:2px; left:2px; width:16px; height:16px; background:var(--text-muted); border-radius:50%; transition:transform 0.3s, background 0.3s;"></div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- MODE DROPDOWN (default) -->
                     <div id="wrapper-dropdown-barang">
                         <div id="dropdown-barang" class="custom-select-container">
@@ -1077,12 +1072,12 @@
 
                 <div class="row-grid">
                     <div class="form-group">
-                        <label>QTY</label>
-                        <input type="number" id="qty" class="form-control" placeholder="0">
+                        <label><span class="label-chip">Harga Satuan</span></label>
+                        <input type="number" id="jumlah" class="form-control" placeholder="Rp">
                     </div>
                     <div class="form-group">
-                        <label>Harga Satuan</label>
-                        <input type="number" id="jumlah" class="form-control" placeholder="Rp">
+                        <label><span class="label-chip">QTY</span></label>
+                        <input type="number" id="qty" class="form-control" placeholder="0">
                     </div>
                 </div>
                 <button type="button" class="btn-secondary" onclick="tambahKeReview()">
@@ -1091,16 +1086,17 @@
             </div>
 
             <div class="review-section">
-                <div class="review-header">
-                    <span class="label-chip label-chip-sm">Review Sementara Barang Baru</span>
+                <div class="review-header" style="justify-content: flex-end;">
+                    <span class="label-chip label-chip-sm">Review</span>
                 </div>
                 <table class="review-table">
                     <thead>
                         <tr>
-                            <th>Jenis</th>
-                            <th>Qty</th>
-                            <th>Subtotal</th>
-                            <th></th>
+                            <th>NO</th>
+                            <th>JENIS</th>
+                            <th>QTY</th>
+                            <th>HARGA</th>
+                            <th>JUMLAH</th>
                         </tr>
                     </thead>
                     <tbody id="review-list-body"></tbody>
@@ -1109,33 +1105,28 @@
 
             <div class="row-grid">
                 <div class="form-group">
-                    <label>Uang Muka (DP)</label>
-                    <input type="text" inputmode="numeric" id="dp" class="form-control" placeholder="Rp 0">
+                    <label><span class="label-chip" style="min-width: 175px;">Status</span></label>
+                    <div id="dropdown-status" class="custom-select-container">
+                        <div class="form-control custom-select-trigger" onclick="toggleCustomDropdown('dropdown-status')">
+                            <span class="selected-value" data-value="PENDING">PENDING</span>
+                            <span class="chevron-icon">▾</span>
+                        </div>
+                        <div class="custom-options-menu">
+                            <div class="custom-option selected" onclick="selectCustomOption('dropdown-status', 'PENDING', 'PENDING')">PENDING</div>
+                            <div class="custom-option" onclick="selectCustomOption('dropdown-status', 'LUNAS', 'LUNAS')">LUNAS</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label>Sisa Tagihan</label>
-                    <input type="text" id="total" class="form-control" style="background-color: var(--bg-primary); font-weight: bold; color: var(--accent-pending);" readonly value="0">
-                </div>
-            </div>
-            
-            <!-- CUSTOM DROPDOWN 3: STATUS PEMBAYARAN -->
-            <div class="form-group" style="margin-bottom: 22px;">
-                <label>Status Pembayaran</label>
-                <div id="dropdown-status" class="custom-select-container">
-                    <div class="form-control custom-select-trigger" onclick="toggleCustomDropdown('dropdown-status')">
-                        <span class="selected-value" data-value="PENDING">PENDING</span>
-                        <span class="chevron-icon">▾</span>
-                    </div>
-                    <div class="custom-options-menu">
-                        <div class="custom-option selected" onclick="selectCustomOption('dropdown-status', 'PENDING', 'PENDING')">PENDING</div>
-                        <div class="custom-option" onclick="selectCustomOption('dropdown-status', 'LUNAS', 'LUNAS')">LUNAS</div>
-                    </div>
+                    <label><span class="label-chip">Uang Muka (DP)</span></label>
+                    <input type="text" inputmode="numeric" id="dp" class="form-control" placeholder="Rp 0">
                 </div>
             </div>
 
-            <button type="button" class="btn-submit" onclick="simpanSemuaKeNetwork()">
+            <button type="button" class="btn-submit" onclick="simpanSemuaKeNetwork()" style="margin-top: 6px; margin-bottom: 10px;">
                 Simpan Data
             </button>
+            <input type="hidden" id="total" value="0">
         </div>
 
         <!-- TAB RIWAYAT ALL BON -->
@@ -1519,24 +1510,31 @@
             isModeManual = !isModeManual;
             const wrapperDropdown = document.getElementById('wrapper-dropdown-barang');
             const wrapperManual = document.getElementById('wrapper-manual-barang');
-            const btn = document.getElementById('btn-toggle-manual');
             const label = document.getElementById('label-toggle-manual');
+            const track = document.getElementById('toggle-switch-track');
+            const thumb = document.getElementById('toggle-switch-thumb');
 
             if (isModeManual) {
                 wrapperDropdown.style.display = 'none';
                 wrapperManual.style.display = 'block';
                 document.getElementById('input-manual-barang').value = '';
                 setTimeout(() => document.getElementById('input-manual-barang').focus(), 100);
-                btn.style.background = 'rgba(162,213,51,0.3)';
-                btn.style.borderColor = 'var(--accent-primary)';
-                btn.style.color = '#ffffff';
-                label.textContent = 'Dari Master';
+                // Switch ON
+                track.style.background = 'rgba(162,213,51,0.25)';
+                track.style.borderColor = 'var(--accent-primary)';
+                thumb.style.transform = 'translateX(18px)';
+                thumb.style.background = 'var(--accent-primary)';
+                label.style.color = 'var(--accent-primary)';
+                label.textContent = 'Manual';
             } else {
                 wrapperDropdown.style.display = 'block';
                 wrapperManual.style.display = 'none';
-                btn.style.background = 'rgba(162,213,51,0.12)';
-                btn.style.borderColor = 'rgba(162,213,51,0.35)';
-                btn.style.color = 'var(--accent-primary)';
+                // Switch OFF
+                track.style.background = 'var(--bg-primary)';
+                track.style.borderColor = 'var(--border-color)';
+                thumb.style.transform = 'translateX(0)';
+                thumb.style.background = 'var(--text-muted)';
+                label.style.color = 'var(--text-muted)';
                 label.textContent = 'Manual';
                 const trigger = document.querySelector('#dropdown-barang .selected-value');
                 trigger.textContent = '-- Pilih Jenis Barang --';
