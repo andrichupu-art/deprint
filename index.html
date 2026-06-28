@@ -1416,7 +1416,8 @@
         .on('postgres_changes', { event: '*', schema: 'public', table: 'database_bon' }, async () => {
             await fetchAllFromSupabase();
             renderRiwayat();
-            renderCetak(cetakFreshFromPelunasan);
+            const freshFlag = cetakFreshFromPelunasan;
+            renderCetak(freshFlag);
         })
         .subscribe();
 }
@@ -1501,9 +1502,10 @@
                 return;
             }
 
-            optionsMenu.innerHTML = masterVendor.map(v => `
-                <div class="custom-option" onclick="selectCustomOption('dropdown-vendor', '${v.name}', '${v.name}')">${v.name}</div>
-            `).join('');
+            optionsMenu.innerHTML = masterVendor.map(v => {
+                const safe = v.name.replace(/'/g, "\\'");
+                return `<div class="custom-option" onclick="selectCustomOption('dropdown-vendor', '${safe}', '${safe}')">${v.name}</div>`;
+            }).join('');
         }
 
         function updateDropdownJenisBarang() {
@@ -1515,9 +1517,10 @@
                 return;
             }
 
-            optionsMenu.innerHTML = masterBarang.map(b => `
-                <div class="custom-option" onclick="selectCustomOption('dropdown-barang', '${b.jenis}', '${b.jenis}', autoFillHargaBarang)">${b.jenis}</div>
-            `).join('');
+            optionsMenu.innerHTML = masterBarang.map(b => {
+                const safe = b.jenis.replace(/'/g, "\\'");
+                return `<div class="custom-option" onclick="selectCustomOption('dropdown-barang', '${safe}', '${safe}', autoFillHargaBarang)">${b.jenis}</div>`;
+            }).join('');
         }
 
         function autoFillHargaBarang() {
@@ -1588,7 +1591,6 @@
         }
 
         function masukKeSistem() {
-            document.getElementById('main-nav').classList.add('visible');
             switchTab('input-tab', document.getElementById('default-active-btn'));
         }
 
@@ -1601,6 +1603,8 @@
 
             if (tabId === 'welcome-tab') {
                 document.getElementById('main-nav').classList.remove('visible');
+            } else {
+                document.getElementById('main-nav').classList.add('visible');
             }
 
             // Jika user masuk cetak secara manual (bukan dari pelunasan), reset flag → mode hidden
@@ -1645,15 +1649,17 @@
         // --- CRUD VENDOR ---
         function renderMasterVendorList() {
             const container = document.getElementById('list-master-vendor');
-            container.innerHTML = masterVendor.map(vendor => `
+            container.innerHTML = masterVendor.map(vendor => {
+                const safe = vendor.name.replace(/'/g, "\\'");
+                return `
                 <div class="master-item-row">
                     <span style="font-weight:600;">${vendor.name}</span>
                     <div class="master-actions">
-                        <button class="btn-action-edit" onclick="editMasterVendor('${vendor.id}', '${vendor.name}')">✏</button>
-                        <button class="btn-action-delete" onclick="hapusMasterVendor('${vendor.id}', '${vendor.name}')">🗑</button>
+                        <button class="btn-action-edit" onclick="editMasterVendor('${vendor.id}', '${safe}')">✏</button>
+                        <button class="btn-action-delete" onclick="hapusMasterVendor('${vendor.id}', '${safe}')">🗑</button>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
             const countEl = document.getElementById('count-vendor');
             const toggleBtn = document.getElementById('toggle-vendor-btn');
             if (countEl) countEl.textContent = masterVendor.length;
@@ -1729,18 +1735,20 @@
         // --- CRUD BARANG ---
         function renderMasterBarangList() {
             const container = document.getElementById('list-master-barang');
-            container.innerHTML = masterBarang.map(barang => `
+            container.innerHTML = masterBarang.map(barang => {
+                const safe = barang.jenis.replace(/'/g, "\\'");
+                return `
                 <div class="master-item-row">
                     <div>
                         <p style="font-weight:600; color:#fff;">${barang.jenis}</p>
                         <p style="font-size:0.75rem; color:var(--accent-primary);">Rp ${barang.harga.toLocaleString('id-ID')}</p>
                     </div>
                     <div class="master-actions">
-                        <button class="btn-action-edit" onclick="editMasterBarang('${barang.id}', '${barang.jenis}', ${barang.harga})">✏</button>
-                        <button class="btn-action-delete" onclick="hapusMasterBarang('${barang.id}', '${barang.jenis}')">🗑</button>
+                        <button class="btn-action-edit" onclick="editMasterBarang('${barang.id}', '${safe}', ${barang.harga})">✏</button>
+                        <button class="btn-action-delete" onclick="hapusMasterBarang('${barang.id}', '${safe}')">🗑</button>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
             const countEl = document.getElementById('count-barang');
             const toggleBtn = document.getElementById('toggle-barang-btn');
             if (countEl) countEl.textContent = masterBarang.length;
@@ -1910,9 +1918,9 @@
 
             if (statusAkhir === 'LUNAS') {
                 cetakFreshFromPelunasan = true;
-                switchTab('cetak-tab', document.querySelectorAll('.nav-item')[3]);
+                switchTab('cetak-tab', document.querySelector('.nav-item[onclick*="cetak-tab"]'));
             } else {
-                switchTab('riwayat-tab', document.querySelectorAll('.nav-item')[2]);
+                switchTab('riwayat-tab', document.querySelector('.nav-item[onclick*="riwayat-tab"]'));
             }
         }
 
@@ -2001,22 +2009,28 @@
                 showToast('success','Pelunasan Sah! ✅','Semua BON vendor telah dilunasi!');
                 tutupPopup();
                 _pelunasanVendorTarget = null;
+                cetakFreshFromPelunasan = true;
                 await fetchAllFromSupabase();
                 renderRiwayat();
+                switchTab('cetak-tab', document.querySelector('.nav-item[onclick*="cetak-tab"]'));
             } else {
                 const bon = databaseBon.find(b => b.id == bonId);
                 if (bon) {
                     const dpBaru = bon.dp + nominalPelunasan;
+                    const sesiIdBaru = 'sesi_' + Date.now();
                     await _supabase.from('database_bon').update({
                         dp: dpBaru,
                         sisa: 0,
-                        status: 'LUNAS'
+                        status: 'LUNAS',
+                        sesi_id: sesiIdBaru
                     }).eq('id', bonId);
 
                     showToast('success','Pelunasan Sah! ✅','Status BON telah diubah menjadi LUNAS!');
                     tutupPopup();
+                    cetakFreshFromPelunasan = true;
                     await fetchAllFromSupabase();
                     renderRiwayat();
+                    switchTab('cetak-tab', document.querySelector('.nav-item[onclick*="cetak-tab"]'));
                 }
             }
         }
@@ -2139,7 +2153,7 @@
                         }
                     });
                     totalKotor += b.total_kotor;
-                    totalDP += (b.dp_awal ?? 0);
+                    totalDP += isPending ? b.dp : (b.dp_awal ?? 0);
                 });
                 const sisa = totalKotor - totalDP;
 
@@ -2661,7 +2675,6 @@
         }
         function exitToWelcome() {
             switchTab('welcome-tab', document.getElementById('welcome-btn'));
-            document.getElementById('main-nav').classList.remove('visible');
         }
 
         // ===== FORMAT RUPIAH HELPERS =====
